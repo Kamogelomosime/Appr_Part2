@@ -1,0 +1,291 @@
+﻿@model IEnumerable<Appr_Part2.Models.Donation>
+@{
+    ViewData["Title"] = "My Donations";
+}
+
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center">
+                <div class="page-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="ms-4">
+                    <h1 class="fw-bold mb-2">My Donations</h1>
+                    <p class="text-muted mb-0">Track your generosity and its impact on communities</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-action="Create" class="btn btn-success btn-lg px-4 py-3">
+                <i class="fas fa-plus me-2"></i> New Donation
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-hands-helping fa-3x"></i>
+            </div>
+            <h4 class="fw-bold mt-4">Start Making a Difference</h4>
+            <p class="text-muted mb-4">Your first donation can change lives. Join our community of givers today.</p>
+            <a asp-action="Create" class="btn btn-primary btn-lg">
+                <i class="fas fa-gift me-2"></i> Make Your First Donation
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Personal Stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count()</div>
+                    <div class="stat-label">Total Donations</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(d => d.Status == "Pending")</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-info">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(d => d.Status == "Received")</div>
+                    <div class="stat-label">Received</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(d => d.Status == "Distributed")</div>
+                    <div class="stat-label">Distributed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donations Table -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header bg-light py-4">
+                <h5 class="fw-bold mb-0"><i class="fas fa-list me-2"></i>Donation History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="ps-4">Type</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Target Area</th>
+                                <th>Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var donation in Model)
+                            {
+                                <tr class="donation-row">
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="type-icon me-3">
+                                                <i class="@GetDonationTypeIcon(donation.DonationType)"></i>
+                                            </div>
+                                            <span class="fw-semibold">@donation.DonationType</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="description-text">@donation.ItemDescription</div>
+                                        @if (!string.IsNullOrEmpty(donation.SpecialInstructions))
+                                        {
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle me-1"></i>@donation.SpecialInstructions
+                                            </small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="quantity-badge">
+                                            @donation.Quantity @donation.Unit
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="location-badge">
+                                            <i class="fas fa-map-marker-alt me-1"></i>@donation.TargetArea
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="date-text">
+                                            @donation.DonationDate.ToString("MMM dd, yyyy")
+                                        </div>
+                                        <small class="text-muted">
+                                            @donation.DonationDate.ToString("hh:mm tt")
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-badge bg-@GetStatusColor(donation.Status)">
+                                            @donation.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="impact-text">
+                <i class="fas fa-hands-helping text-success me-2"></i>
+                <span class="fw-semibold">You've helped @Model.Count() communities</span>
+            </div>
+            <a asp-action="AllDonations" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-list me-2"></i> View All Community Donations
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .donation-row:hover {
+        background-color: #f8fafc;
+        transform: translateX(5px);
+        transition: var(--transition);
+    }
+
+    .type-icon {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+    }
+
+    .description-text {
+        font-weight: 500;
+        color: var(--dark-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .quantity-badge {
+        background: #f0f9ff;
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .location-badge {
+        color: var(--text-color);
+        font-weight: 500;
+    }
+
+    .date-text {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.875rem;
+        min-width: 100px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .impact-text {
+        font-size: 1.1rem;
+        color: var(--success-color);
+    }
+
+    .table-dark {
+        background: var(--gradient-dark) !important;
+    }
+
+        .table-dark th {
+            border: none;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+        }
+
+    .card-body td {
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+    }
+</style>
+
+@functions {
+    string GetDonationTypeColor(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "warning",
+            "clothing" => "info",
+            "medical" => "danger",
+            "money" => "success",
+            _ => "secondary"
+        };
+    }
+
+    string GetDonationTypeIcon(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "food" => "fas fa-utensils",
+            "clothing" => "fas fa-tshirt",
+            "medical" => "fas fa-briefcase-medical",
+            "money" => "fas fa-money-bill-wave",
+            _ => "fas fa-gift"
+        };
+    }
+
+    string GetStatusColor(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "warning",
+            "received" => "info",
+            "distributed" => "success",
+            "cancelled" => "danger",
+            _ => "secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

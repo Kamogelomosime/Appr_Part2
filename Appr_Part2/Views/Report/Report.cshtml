@@ -1,0 +1,131 @@
+﻿@model Appr_Part2.Models.IncidentReportViewModel
+@{
+    ViewData["Title"] = "Report Incident";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-danger text-white text-center py-4 rounded-top-4">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Report Disaster Incident</h4>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success border-0 rounded-3 shadow-sm mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                <div class="fw-semibold">@TempData["SuccessMessage"]</div>
+                            </div>
+                        </div>
+                    }
+
+                    <form asp-action="Report" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="alert alert-danger rounded-3"></div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Title" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-heading text-danger"></i></span>
+                                <input asp-for="Title" class="form-control" placeholder="Brief title of the incident" />
+                            </div>
+                            <span asp-validation-for="Title" class="text-danger small mt-1"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Description" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light align-items-start pt-3"><i class="fas fa-file-alt text-danger"></i></span>
+                                <textarea asp-for="Description" class="form-control" rows="5" placeholder="Detailed description of what happened"></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small mt-1"></span>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="Location" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-map-marker-alt text-danger"></i></span>
+                                        <input asp-for="Location" class="form-control" placeholder="City, Town, or Area" />
+                                    </div>
+                                    <span asp-validation-for="Location" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="IncidentDate" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-calendar text-danger"></i></span>
+                                        <input asp-for="IncidentDate" class="form-control" type="datetime-local" />
+                                    </div>
+                                    <span asp-validation-for="IncidentDate" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="DisasterType" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-tag text-danger"></i></span>
+                                        <select asp-for="DisasterType" class="form-control">
+                                            <option value="">Select Disaster Type</option>
+                                            <option value="Flood">Flood</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Earthquake">Earthquake</option>
+                                            <option value="Storm">Storm</option>
+                                            <option value="Drought">Drought</option>
+                                            <option value="Landslide">Landslide</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="DisasterType" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="UrgencyLevel" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-exclamation text-danger"></i></span>
+                                        <select asp-for="UrgencyLevel" class="form-control">
+                                            <option value="">Select Urgency Level</option>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                            <option value="Critical">Critical</option>
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="UrgencyLevel" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-5">
+                            <label asp-for="AffectedAreas" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-users text-danger"></i></span>
+                                <input asp-for="AffectedAreas" class="form-control" placeholder="Specific areas or communities affected" />
+                            </div>
+                            <span asp-validation-for="AffectedAreas" class="text-danger small mt-1"></span>
+                        </div>
+
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 py-2">Cancel</a>
+                            <button type="submit" class="btn btn-danger btn-lg px-4 py-2">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

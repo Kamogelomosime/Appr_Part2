@@ -1,0 +1,242 @@
+﻿@model Appr_Part2.Models.DonationViewModel
+@{
+    ViewData["Title"] = "Make Donation";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4 donation-form-card">
+                <div class="card-header text-center py-5">
+                    <div class="donation-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3 class="fw-bold mt-4 mb-2">Make a Donation</h3>
+                    <p class="text-muted">Your generosity makes a real difference in people's lives</p>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success border-0 rounded-3 shadow-sm mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                <div class="fw-semibold">@TempData["SuccessMessage"]</div>
+                            </div>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="alert alert-danger rounded-3 mb-4"></div>
+
+                        <!-- Donation Type -->
+                        <div class="form-group mb-4">
+                            <label asp-for="DonationType" class="form-label fw-semibold">Donation Type</label>
+                            <div class="donation-type-selector">
+                                <div class="row g-3">
+                                    <div class="col-6 col-md-4">
+                                        <input type="radio" asp-for="DonationType" value="Food" id="foodType" class="donation-type-radio">
+                                        <label for="foodType" class="donation-type-option">
+                                            <i class="fas fa-utensils"></i>
+                                            <span>Food Supplies</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <input type="radio" asp-for="DonationType" value="Clothing" id="clothingType" class="donation-type-radio">
+                                        <label for="clothingType" class="donation-type-option">
+                                            <i class="fas fa-tshirt"></i>
+                                            <span>Clothing</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <input type="radio" asp-for="DonationType" value="Medical" id="medicalType" class="donation-type-radio">
+                                        <label for="medicalType" class="donation-type-option">
+                                            <i class="fas fa-briefcase-medical"></i>
+                                            <span>Medical Supplies</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <input type="radio" asp-for="DonationType" value="Money" id="moneyType" class="donation-type-radio">
+                                        <label for="moneyType" class="donation-type-option">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <span>Financial</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-6 col-md-4">
+                                        <input type="radio" asp-for="DonationType" value="Other" id="otherType" class="donation-type-radio">
+                                        <label for="otherType" class="donation-type-option">
+                                            <i class="fas fa-gift"></i>
+                                            <span>Other</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <span asp-validation-for="DonationType" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <!-- Item Description -->
+                        <div class="form-group mb-4">
+                            <label asp-for="ItemDescription" class="form-label fw-semibold">Item Description</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-primary text-white">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                                <textarea asp-for="ItemDescription" class="form-control form-control-lg" rows="3"
+                                          placeholder="Describe what you're donating (e.g., 'Canned goods', 'Winter coats', 'First aid kits')"></textarea>
+                            </div>
+                            <span asp-validation-for="ItemDescription" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <!-- Quantity and Unit -->
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Quantity" class="form-label fw-semibold">Quantity</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-primary text-white">
+                                            <i class="fas fa-balance-scale"></i>
+                                        </span>
+                                        <input asp-for="Quantity" class="form-control form-control-lg" type="number" step="0.01" min="0.01" placeholder="Enter quantity" />
+                                    </div>
+                                    <span asp-validation-for="Quantity" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Unit" class="form-label fw-semibold">Unit</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-primary text-white">
+                                            <i class="fas fa-ruler"></i>
+                                        </span>
+                                        <input asp-for="Unit" class="form-control form-control-lg" placeholder="kg, lbs, pieces, boxes" />
+                                    </div>
+                                    <span asp-validation-for="Unit" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Target Area -->
+                        <div class="form-group mt-4">
+                            <label asp-for="TargetArea" class="form-label fw-semibold">Target Community/Area</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-primary text-white">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </span>
+                                <input asp-for="TargetArea" class="form-control form-control-lg" placeholder="Specific area or community you want to help" />
+                            </div>
+                            <span asp-validation-for="TargetArea" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <!-- Special Instructions -->
+                        <div class="form-group mt-4">
+                            <label asp-for="SpecialInstructions" class="form-label fw-semibold">
+                                Special Instructions <small class="text-muted">(Optional)</small>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-primary text-white">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <textarea asp-for="SpecialInstructions" class="form-control form-control-lg" rows="2"
+                                          placeholder="Any special delivery instructions, handling requirements, or additional notes"></textarea>
+                            </div>
+                            <span asp-validation-for="SpecialInstructions" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3 mt-5 pt-4 border-top">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 py-3">
+                                <i class="fas fa-arrow-left me-2"></i> Back to Donations
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-5 py-3">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Donation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .donation-form-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .donation-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--gradient-success);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 15px 35px rgba(5, 150, 105, 0.3);
+    }
+
+    .donation-type-selector {
+        margin-top: 1rem;
+    }
+
+    .donation-type-radio {
+        display: none;
+    }
+
+    .donation-type-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+        text-align: center;
+        height: 100%;
+    }
+
+        .donation-type-option i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .donation-type-option span {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+    .donation-type-radio:checked + .donation-type-option {
+        background: var(--gradient-primary);
+        border-color: var(--primary-color);
+        color: white;
+        transform: translateY(-5px);
+        box-shadow: var(--box-shadow);
+    }
+
+        .donation-type-radio:checked + .donation-type-option i,
+        .donation-type-radio:checked + .donation-type-option span {
+            color: white;
+        }
+
+    .donation-type-option:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .bg-gradient-primary {
+        background: var(--gradient-primary) !important;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

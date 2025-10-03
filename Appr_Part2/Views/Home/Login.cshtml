@@ -1,0 +1,99 @@
+﻿@model Appr_Part2.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4 login-card">
+                <div class="card-header text-center py-5">
+                    <div class="login-icon">
+                        
+                    </div>
+                    <h3 class="fw-bold mt-4 mb-2">Welcome Back</h3>
+                    <p class="text-muted">Sign in  account</p>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4"></div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Username" class="form-label fw-semibold">Username or Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-primary text-white">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input asp-for="Username" class="form-control form-control-lg" placeholder="Enter your username or email" />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-primary text-white">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control form-control-lg" type="password" placeholder="Enter your password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold">
+                                <i class="fas fa-sign-in-alt me-2"></i> Sign In to Your Account
+                            </button>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <a href="#" class="text-decoration-none text-primary fw-semibold">
+                                <i class="fas fa-key me-1"></i> Forgot your password?
+                            </a>
+                        </div>
+                    </form>
+
+                    <div class="text-center pt-4 border-top">
+                        <p class="mb-0 text-muted">
+                            Don't have an account?
+                            <a asp-action="Register" class="text-primary fw-bold text-decoration-none ms-1">
+                                Create one here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+    }
+
+    .bg-gradient-primary {
+        background: var(--gradient-primary) !important;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,157 @@
+﻿@model Appr_Part2.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4 register-card">
+                <div class="card-header text-center py-5">
+                    <div class="register-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3 class="fw-bold mt-4 mb-2">Join Our Community</h3>
+                    <p class="text-muted">Create your account and start making a difference today</p>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success border-0 rounded-3 shadow-sm mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                <div class="fw-semibold">@TempData["SuccessMessage"]</div>
+                            </div>
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4"></div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Username" class="form-label fw-semibold">Username</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-success text-white">
+                                            <i class="fas fa-at"></i>
+                                        </span>
+                                        <input asp-for="Username" class="form-control form-control-lg" placeholder="Choose a username" />
+                                    </div>
+                                    <span asp-validation-for="Username" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-success text-white">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                        <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter your email" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="form-label fw-semibold">First Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-success text-white">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input asp-for="FirstName" class="form-control form-control-lg" placeholder="First name" />
+                                    </div>
+                                    <span asp-validation-for="FirstName" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="LastName" class="form-label fw-semibold">Last Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-gradient-success text-white">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input asp-for="LastName" class="form-control form-control-lg" placeholder="Last name" />
+                                    </div>
+                                    <span asp-validation-for="LastName" class="text-danger small mt-2"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-success text-white">
+                                    <i class="fas fa-phone"></i>
+                                </span>
+                                <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Phone number (optional)" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gradient-success text-white">
+                                    <i class="fas fa-key"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control form-control-lg" type="password" placeholder="Create a strong password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small mt-2"></span>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-success btn-lg py-3 fw-bold">
+                                <i class="fas fa-user-plus me-2"></i> Create Your Account
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center pt-4 mt-4 border-top">
+                        <p class="mb-0 text-muted">
+                            Already have an account?
+                            <a asp-action="Login" class="text-success fw-bold text-decoration-none ms-1">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .register-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--gradient-success);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 15px 35px rgba(5, 150, 105, 0.3);
+    }
+
+    .bg-gradient-success {
+        background: var(--gradient-success) !important;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

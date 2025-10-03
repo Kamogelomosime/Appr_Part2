@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Appr_Part2.Models.IncidentReport>
+@{
+    ViewData["Title"] = "Disaster Incidents";
+}
+
+<div class="container mt-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+        <h2 class="fw-bold text-primary mb-3 mb-md-0">
+            <i class="fas fa-exclamation-triangle text-danger me-2"></i> Disaster Incidents
+        </h2>
+        <a asp-action="Report" class="btn btn-danger btn-lg px-4 py-2">
+            <i class="fas fa-plus me-2"></i> Report New Incident
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info border-0 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle fa-2x text-info me-3"></i>
+                <div>
+                    <strong class="d-block mb-1">No incident reports found.</strong>
+                    Be the first to report an incident and help your community.
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var incident in Model)
+            {
+                <div class="col-xl-6 col-lg-12">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 border-start border-@GetUrgencyColor(incident.UrgencyLevel) border-5">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center py-3 rounded-top-3">
+                            <span class="badge bg-@GetUrgencyColor(incident.UrgencyLevel) rounded-pill px-3 py-2 fw-semibold">
+                                @incident.UrgencyLevel
+                            </span>
+                            <small class="text-muted fw-semibold">@incident.ReportedAt.ToString("MMM dd, yyyy")</small>
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold text-dark mb-3">@incident.Title</h5>
+                            <p class="card-text text-muted mb-4">@incident.Description</p>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-dark">@incident.Location</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Incident Date</small>
+                                            <strong class="text-dark">@incident.IncidentDate.ToString("MMM dd, yyyy HH:mm")</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-tag text-primary me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Disaster Type</small>
+                                            <span class="badge bg-secondary rounded-pill px-3 py-2">@incident.DisasterType</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center py-3">
+                            <span class="badge bg-@GetStatusColor(incident.Status) rounded-pill px-3 py-2">
+                                @incident.Status
+                            </span>
+                            <a asp-action="Details" asp-route-id="@incident.IncidentId" class="btn btn-outline-primary btn-sm px-3 py-2">
+                                View Details <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    string GetUrgencyColor(string urgency)
+    {
+        return urgency?.ToLower() switch
+        {
+            "critical" => "danger",
+            "high" => "warning",
+            "medium" => "info",
+            "low" => "success",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusColor(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "warning",
+            "under review" => "info",
+            "in progress" => "primary",
+            "resolved" => "success",
+            _ => "secondary"
+        };
+    }
+}

@@ -1,0 +1,131 @@
+﻿@model Appr_Part2.Models.IncidentReport
+@{
+    ViewData["Title"] = "Incident Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-4 rounded-top-4">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Incident Details</h4>
+                    <span class="badge bg-@GetUrgencyColor(Model.UrgencyLevel) fs-6 px-3 py-2 rounded-pill">
+                        @Model.UrgencyLevel
+                    </span>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row mb-5">
+                        <div class="col-lg-8">
+                            <h2 class="text-danger fw-bold mb-3">@Model.Title</h2>
+                            <p class="lead fs-5 text-muted">@Model.Description</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card bg-light border-0 shadow-sm rounded-3">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold text-primary mb-3">Incident Information</h6>
+                                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                                        <strong class="text-muted">Status:</strong>
+                                        <span class="badge bg-@GetStatusColor(Model.Status) rounded-pill px-3 py-2">@Model.Status</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                                        <strong class="text-muted">Type:</strong>
+                                        <span class="fw-semibold">@Model.DisasterType</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong class="text-muted">Reported:</strong>
+                                        <span class="text-muted">@Model.ReportedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100 rounded-3">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-map-marker-alt me-2"></i>Location Details</h6>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="mb-3">
+                                        <strong class="text-muted d-block mb-1">Location:</strong>
+                                        <span class="fs-6">@Model.Location</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted d-block mb-1">Affected Areas:</strong>
+                                        <span class="fs-6">@(Model.AffectedAreas ?? "Not specified")</span>
+                                    </div>
+                                    <div>
+                                        <strong class="text-muted d-block mb-1">Incident Date:</strong>
+                                        <span class="fs-6">@Model.IncidentDate.ToString("MMMM dd, yyyy 'at' HH:mm")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100 rounded-3">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-user me-2"></i>Reporter Information</h6>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="mb-3">
+                                        <strong class="text-muted d-block mb-1">Reported By:</strong>
+                                        <span class="fs-6">@Model.User?.Username</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong class="text-muted d-block mb-1">Contact Email:</strong>
+                                        <span class="fs-6">@Model.User?.Email</span>
+                                    </div>
+                                    <div>
+                                        <strong class="text-muted d-block mb-1">Report Time:</strong>
+                                        <span class="fs-6">@Model.ReportedAt.ToString("MMMM dd, yyyy 'at' HH:mm")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="d-flex flex-column flex-md-row justify-content-start gap-3">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 py-2">
+                                <i class="fas fa-arrow-left me-2"></i> Back to Incidents
+                            </a>
+                            <a asp-controller="Donation" asp-action="Create" class="btn btn-success btn-lg px-4 py-2">
+                                <i class="fas fa-donate me-2"></i> Donate to Help
+                            </a>
+                            <a asp-controller="Volunteer" asp-action="Register" class="btn btn-warning btn-lg px-4 py-2">
+                                <i class="fas fa-hands-helping me-2"></i> Volunteer to Assist
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetUrgencyColor(string urgency)
+    {
+        return urgency?.ToLower() switch
+        {
+            "critical" => "danger",
+            "high" => "warning",
+            "medium" => "info",
+            "low" => "success",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusColor(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "warning",
+            "under review" => "info",
+            "in progress" => "primary",
+            "resolved" => "success",
+            _ => "secondary"
+        };
+    }
+}

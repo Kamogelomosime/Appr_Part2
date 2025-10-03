@@ -1,0 +1,671 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appr_Part2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #7c3aed;
+            --accent-color: #dc2626;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --light-color: #f8fafc;
+            --dark-color: #0f172a;
+            --text-color: #334155;
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --box-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-dark: linear-gradient(135deg, var(--dark-color), #1e293b);
+            --gradient-success: linear-gradient(135deg, var(--success-color), #10b981);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+            .navbar-brand i {
+                margin-right: 12px;
+                font-size: 2rem;
+                background: var(--gradient-primary);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 0.8rem 1.2rem !important;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            color: var(--text-color) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 3px;
+                background: var(--gradient-primary);
+                transition: var(--transition);
+                transform: translateX(-50%);
+                border-radius: 10px;
+            }
+
+            .nav-link:hover::before,
+            .nav-link.active::before {
+                width: 80%;
+            }
+
+            .nav-link:hover {
+                color: var(--primary-color) !important;
+                transform: translateY(-2px);
+            }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown-item {
+            padding: 0.8rem 1.2rem;
+            transition: var(--transition);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+            .dropdown-item:hover {
+                background: var(--gradient-primary);
+                color: white;
+                transform: translateX(5px);
+            }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-dark), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%230f172a" width="1200" height="800"/><g fill="%231e293b" opacity="0.4"><circle cx="200" cy="100" r="80"/><circle cx="1000" cy="700" r="120"/><circle cx="800" cy="200" r="60"/><circle cx="400" cy="600" r="100"/></g></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 140px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .hero-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path fill="%232563eb" opacity="0.1" d="M0,0 Q600,200 1200,0 L1200,800 Q600,600 0,800 Z"/></svg>');
+                background-size: cover;
+            }
+
+            .hero-section h1 {
+                font-size: 3.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .hero-section p {
+                font-size: 1.3rem;
+                max-width: 700px;
+                margin: 0 auto 3rem;
+                opacity: 0.9;
+                font-weight: 300;
+            }
+
+        .btn-hero {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+            margin: 0 12px 15px;
+            border: none;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn-hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                transition: var(--transition);
+            }
+
+            .btn-hero:hover::before {
+                left: 100%;
+            }
+
+            .btn-hero:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--box-shadow-hover);
+            }
+
+        /* Feature Cards */
+        .feature-card {
+            transition: var(--transition);
+            border: none;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            height: 100%;
+            background: white;
+            position: relative;
+        }
+
+            .feature-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: var(--gradient-primary);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-12px) scale(1.02);
+                box-shadow: var(--box-shadow-hover);
+            }
+
+            .feature-card .card-body {
+                padding: 2.5rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            .feature-card i {
+                margin-bottom: 1.5rem;
+                display: inline-block;
+                padding: 1.2rem;
+                border-radius: 50%;
+                background: var(--gradient-primary);
+                color: white;
+                font-size: 1.8rem;
+                box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            background: white;
+            transition: var(--transition);
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--box-shadow-hover);
+            }
+
+        .card-header {
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0 !important;
+            padding: 1.5rem 2rem;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+        }
+
+        /* Forms */
+        .form-control {
+            border-radius: var(--border-radius);
+            padding: 0.9rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+            .form-control:focus {
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                border-color: var(--primary-color);
+                transform: translateY(-2px);
+            }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: var(--border-radius);
+            padding: 0.9rem 2rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-lg {
+            padding: 1.1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6);
+            }
+
+        .btn-success {
+            background: var(--gradient-success);
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-color), #ef4444);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #f59e0b);
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--gradient-primary);
+            }
+
+            .footer h5 {
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                position: relative;
+                padding-bottom: 10px;
+                color: white;
+            }
+
+                .footer h5::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 50px;
+                    height: 3px;
+                    background: var(--gradient-primary);
+                    border-radius: 10px;
+                }
+
+            .footer ul li {
+                margin-bottom: 0.8rem;
+            }
+
+            .footer a {
+                color: #cbd5e1;
+                transition: var(--transition);
+                text-decoration: none;
+                font-weight: 400;
+            }
+
+                .footer a:hover {
+                    color: white;
+                    padding-left: 8px;
+                }
+
+        /* Profile Icons */
+        .profile-icon {
+            width: 140px;
+            height: 140px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            box-shadow: var(--box-shadow);
+            font-size: 3rem;
+            transition: var(--transition);
+        }
+
+            .profile-icon:hover {
+                transform: scale(1.1) rotate(5deg);
+            }
+
+        .profile-icon-sm {
+            width: 90px;
+            height: 90px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            box-shadow: var(--box-shadow);
+            font-size: 2rem;
+        }
+
+        .profile-icon-lg {
+            width: 160px;
+            height: 160px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            box-shadow: var(--box-shadow);
+            font-size: 3.5rem;
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: var(--border-radius-lg);
+            border: none;
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: var(--success-color);
+            border-left: 5px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: var(--accent-color);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary-color);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Quick Actions */
+        .quick-actions .btn {
+            flex: 1;
+            min-width: 200px;
+            margin: 8px;
+            padding: 1.2rem 1.5rem;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-top: 5px solid var(--primary-color);
+        }
+
+            .stat-card:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--box-shadow-hover);
+            }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .hero-section
+
+        {
+            padding: 100px 0 60px;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+        }
+
+        .btn-hero {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .quick-actions .btn {
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @@keyframes slideUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                     Appr_Part2
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Report" asp-action="Index">Report</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Donation" asp-action="Index2">Donations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Volunteer" asp-action="Index">Volunteers</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Donation" asp-action="Index"><i class="fas fa-gift me-2"></i>My Donations</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Volunteer" asp-action="MyRegistration"><i class="fas fa-user-check me-2"></i>My Volunteer Registration</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Home" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Login"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Register"><i class="fas fa-user-plus me-1"></i>Register</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add animations on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.feature-card, .stat-card, .card');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('slide-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // Add loading animation
+            document.body.classList.add('fade-in');
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

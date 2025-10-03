@@ -1,0 +1,194 @@
+﻿@model Appr_Part2.Models.User
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4 profile-card">
+                <div class="card-header text-center py-5">
+                    <div class="profile-icon-lg">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3 class="fw-bold mt-4 mb-2">User Profile</h3>
+                    <p class="text-muted">Manage your account information and preferences</p>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row align-items-center mb-5">
+                        <div class="col-md-4 text-center mb-4 mb-md-0">
+                            <div class="profile-avatar">
+                                <div class="avatar-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="status-indicator bg-success"></div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="badge bg-primary rounded-pill px-3 py-2">Active Member</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row g-4">
+                                <div class="col-sm-6">
+                                    <div class="info-card">
+                                        <i class="fas fa-user-tag text-primary"></i>
+                                        <div>
+                                            <label class="info-label">Username</label>
+                                            <div class="info-value">@Model.Username</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-card">
+                                        <i class="fas fa-envelope text-primary"></i>
+                                        <div>
+                                            <label class="info-label">Email Address</label>
+                                            <div class="info-value">@Model.Email</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-card">
+                                        <i class="fas fa-id-card text-primary"></i>
+                                        <div>
+                                            <label class="info-label">Full Name</label>
+                                            <div class="info-value">@Model.FirstName @Model.LastName</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-card">
+                                        <i class="fas fa-phone text-primary"></i>
+                                        <div>
+                                            <label class="info-label">Phone Number</label>
+                                            <div class="info-value">@(Model.PhoneNumber ?? "Not provided")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="info-card">
+                                        <i class="fas fa-calendar-plus text-primary"></i>
+                                        <div>
+                                            <label class="info-label">Member Since</label>
+                                            <div class="info-value">@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="mb-4 fw-bold text-center">Quick Actions</h5>
+                            <div class="d-flex flex-column flex-lg-row justify-content-center gap-4 quick-actions">
+                                <a asp-controller="Incident" asp-action="Report" class="btn btn-danger btn-lg py-3 px-4 action-btn">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <span>Report<br><small>Incident</small></span>
+                                </a>
+                                <a asp-controller="Donation" asp-action="Create" class="btn btn-success btn-lg py-3 px-4 action-btn">
+                                    <i class="fas fa-donate me-2"></i>
+                                    <span>Make<br><small>Donation</small></span>
+                                </a>
+                                <a asp-controller="Volunteer" asp-action="Register" class="btn btn-warning btn-lg py-3 px-4 action-btn">
+                                    <i class="fas fa-hands-helping me-2"></i>
+                                    <span>Become<br><small>Volunteer</small></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+    }
+
+    .profile-avatar {
+        position: relative;
+        display: inline-block;
+    }
+
+    .avatar-icon {
+        width: 120px;
+        height: 120px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+    }
+
+    .status-indicator {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid white;
+    }
+
+    .info-card {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--primary-color);
+        transition: var(--transition);
+    }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            background: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .info-card i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            width: 40px;
+            text-align: center;
+        }
+
+    .info-label {
+        font-size: 0.875rem;
+        color: var(--text-color);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .action-btn {
+        min-width: 160px;
+        text-align: center;
+        border-radius: var(--border-radius-lg);
+        transition: var(--transition);
+    }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .action-btn span small {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+</style>

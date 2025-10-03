@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 fw-bold mb-4">Together We Can Make a Difference</h1>
+                <p class="lead mb-5 fs-5">Providing immediate relief and long-term support to communities affected by natural disasters and emergencies.</p>
+                <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+                
+                    <a asp-controller="Donation" asp-action="Create" class="btn btn-success btn-hero">
+                        <i class="fas fa-donate me-2"></i> Make Donation
+                    </a>
+                    <a asp-controller="Volunteer" asp-action="Register" class="btn btn-warning btn-hero">
+                        <i class="fas fa-hands-helping me-2"></i> Become Volunteer
+                    </a>
+                    <a asp-controller="Report" asp-action="Report" class="btn btn-danger btn-hero">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Report Emergency
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+      
+        
+
+    <div class="row mt-5 pt-5">
+        <div class="col-md-10 mx-auto">
+            <h2 class="text-center mb-4 fw-bold">Recent Emergency Incidents</h2>
+            <div class="alert alert-info border-0 rounded-3 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-2x text-info me-3"></i>
+                    <div>
+                        <strong class="d-block mb-1">Latest Updates:</strong>
+                        Stay informed about recent disaster incidents and relief efforts in your area.
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-controller="Incident" asp-action="Index" class="btn btn-outline-primary btn-lg px-4">
+                    View All Incidents <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

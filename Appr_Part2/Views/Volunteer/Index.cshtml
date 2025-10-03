@@ -1,0 +1,417 @@
+﻿@model IEnumerable<Appr_Part2.Models.Volunteer>
+@{
+    ViewData["Title"] = "Volunteers";
+}
+
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center">
+                <div class="page-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="ms-4">
+                    <h1 class="fw-bold mb-2">Our Volunteer Heroes</h1>
+                    <p class="text-muted mb-0">Meet the incredible people making a difference in our communities</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-action="Register" class="btn btn-warning btn-lg px-4 py-3">
+                <i class="fas fa-user-plus me-2"></i> Join Our Team
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-users fa-3x"></i>
+            </div>
+            <h4 class="fw-bold mt-4">Be the First Volunteer</h4>
+            <p class="text-muted mb-4">Join our team and be the first to make a difference in your community</p>
+            <a asp-action="Register" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus me-2"></i> Become Our First Volunteer
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Volunteer Stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count()</div>
+                    <div class="stat-label">Total Volunteers</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(v => v.Status == "Active")</div>
+                    <div class="stat-label">Active Volunteers</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-warning">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(v => v.RegisteredAt > DateTime.UtcNow.AddDays(-30))</div>
+                    <div class="stat-label">New This Month</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon text-info">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-number">@Model.Count(v => v.HasTransportation)</div>
+                    <div class="stat-label">With Transportation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volunteers Grid -->
+        <div class="row g-4">
+            @foreach (var volunteer in Model)
+            {
+                <div class="col-xl-4 col-lg-6">
+                    <div class="volunteer-card">
+                        <div class="volunteer-header">
+                            <div class="volunteer-avatar">
+                                <i class="fas fa-user"></i>
+                                <div class="status-indicator bg-@GetStatusColor(volunteer.Status)"></div>
+                            </div>
+                            <div class="volunteer-info">
+                                <h5 class="volunteer-name">@volunteer.User?.FirstName @volunteer.User?.LastName</h5>
+                                <div class="volunteer-meta">
+                                    <span class="join-date">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Joined @volunteer.RegisteredAt.ToString("MMM yyyy")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="volunteer-body">
+                            <div class="skill-tags">
+                                @foreach (var skill in volunteer.Skills.Split(',').Take(3))
+                                {
+                                    <span class="skill-tag">@skill.Trim()</span>
+                                }
+                                @if (volunteer.Skills.Split(',').Length > 3)
+                                {
+                                    <span class="skill-tag more">+@(volunteer.Skills.Split(',').Length - 3) more</span>
+                                }
+                            </div>
+                            <div class="volunteer-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-clock text-primary"></i>
+                                    <div>
+                                        <small>Availability</small>
+                                        <strong>@volunteer.Availability</strong>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                    <div>
+                                        <small>Preferred Area</small>
+                                        <strong>@volunteer.PreferredLocation</strong>
+                                    </div>
+                                </div>
+                                @if (volunteer.HasTransportation)
+                                {
+                                    <div class="detail-item">
+                                        <i class="fas fa-car text-success"></i>
+                                        <div>
+                                            <small>Transportation</small>
+                                            <strong>Available</strong>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="volunteer-footer">
+                            <div class="status-badge bg-@GetStatusColor(volunteer.Status)">
+                                @volunteer.Status
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Impact Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="impact-section">
+                    <div class="impact-header">
+                        <i class="fas fa-chart-line fa-2x text-warning"></i>
+                        <h4 class="fw-bold ms-3 mb-0">Volunteer Impact</h4>
+                    </div>
+                    <div class="impact-content">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="impact-item">
+                                    <div class="impact-icon">
+                                        <i class="fas fa-hands-helping"></i>
+                                    </div>
+                                    <div class="impact-text">
+                                        <div class="impact-number">@Model.Count(v => v.Status == "Active")</div>
+                                        <div class="impact-label">Ready to Help</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="impact-item">
+                                    <div class="impact-icon">
+                                        <i class="fas fa-car-side"></i>
+                                    </div>
+                                    <div class="impact-text">
+                                        <div class="impact-number">@Model.Count(v => v.HasTransportation)</div>
+                                        <div class="impact-label">Mobile Volunteers</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="impact-item">
+                                    <div class="impact-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="impact-text">
+                                        <div class="impact-number">@Model.Count(v => v.RegisteredAt.Year == DateTime.UtcNow.Year)</div>
+                                        <div class="impact-label">New This Year</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .volunteer-card {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        height: 100%;
+    }
+
+        .volunteer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+    .volunteer-header {
+        display: flex;
+        align-items: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .volunteer-avatar {
+        position: relative;
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .status-indicator {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+    }
+
+    .volunteer-info {
+        flex: 1;
+    }
+
+    .volunteer-name {
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .volunteer-meta {
+        color: var(--text-color);
+        font-size: 0.875rem;
+    }
+
+    .volunteer-body {
+        padding: 1.5rem;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .skill-tag {
+        background: #f1f5f9;
+        color: var(--primary-color);
+        padding: 0.375rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+        .skill-tag.more {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+    .volunteer-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .detail-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .detail-item small {
+            color: var(--text-color);
+            font-size: 0.75rem;
+        }
+
+        .detail-item strong {
+            color: var(--dark-color);
+            font-size: 0.875rem;
+        }
+
+    .volunteer-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .impact-section {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+    }
+
+    .impact-header {
+        display: flex;
+        align-items: center;
+        padding: 2rem;
+        background: var(--gradient-warning);
+        color: white;
+    }
+
+    .impact-content {
+        padding: 2rem;
+    }
+
+    .impact-item {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+        .impact-item:hover {
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: var(--box-shadow);
+        }
+
+    .impact-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .impact-number {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .impact-label {
+        color: var(--text-color);
+        font-weight: 500;
+    }
+</style>
+
+@functions {
+    string GetStatusColor(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "active" => "success",
+            "inactive" => "secondary",
+            "on leave" => "warning",
+            _ => "secondary"
+        };
+    }
+}

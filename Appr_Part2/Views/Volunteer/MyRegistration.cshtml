@@ -1,0 +1,633 @@
+﻿@model Appr_Part2.Models.Volunteer
+@{
+    ViewData["Title"] = "My Volunteer Registration";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4 volunteer-profile-card">
+                <!-- Header Section -->
+                <div class="card-header text-center py-5 position-relative overflow-hidden">
+                    <div class="header-background"></div>
+                    <div class="volunteer-badge">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3 class="fw-bold mt-4 mb-2 position-relative">My Volunteer Profile</h3>
+                    <p class="text-muted position-relative">Your journey of making a difference starts here</p>
+                </div>
+
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success border-0 rounded-3 shadow-sm mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                                <div class="fw-semibold">@TempData["SuccessMessage"]</div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model == null)
+                    {
+                        <!-- Empty State -->
+                        <div class="empty-volunteer-state text-center py-5">
+                            <div class="empty-icon-large">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4 class="fw-bold text-dark mb-3">Ready to Make a Difference?</h4>
+                            <p class="text-muted mb-4">Join our volunteer team and be the change you want to see in your community</p>
+                            <a asp-action="Register" class="btn btn-warning btn-lg px-5 py-3">
+                                <i class="fas fa-user-plus me-2"></i> Start Your Volunteer Journey
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Volunteer Profile Content -->
+                        <div class="volunteer-profile">
+                            <div class="row align-items-center">
+                                <!-- Avatar Section -->
+                                <div class="col-md-4 text-center mb-4 mb-md-0">
+                                    <div class="volunteer-avatar-large">
+                                        <i class="fas fa-user-shield"></i>
+                                        <div class="status-pulse bg-@GetStatusColor(Model.Status)"></div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="volunteer-status-badge bg-@GetStatusColor(Model.Status)">
+                                            @Model.Status Volunteer
+                                        </span>
+                                    </div>
+                                    <div class="volunteer-stats mt-3">
+                                        <div class="stat-item">
+                                            <div class="stat-number">@CalculateVolunteerImpact(Model.RegisteredAt)</div>
+                                            <div class="stat-label">Potential Impact</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Profile Details -->
+                                <div class="col-md-8">
+                                    <div class="profile-grid">
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-calendar-plus"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Registration Date</label>
+                                                <div class="profile-value">@Model.RegisteredAt.ToString("MMMM dd, yyyy")</div>
+                                                <small class="text-muted">@GetTimeSinceRegistration(Model.RegisteredAt)</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-tools"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Skills & Expertise</label>
+                                                <div class="profile-value">@Model.Skills</div>
+                                                <div class="skill-tags mt-2">
+                                                    @foreach (var skill in Model.Skills.Split(',').Take(4))
+                                                    {
+                                                        <span class="skill-tag">@skill.Trim()</span>
+                                                    }
+                                                    @if (Model.Skills.Split(',').Length > 4)
+                                                    {
+                                                        <span class="skill-tag more">+@(Model.Skills.Split(',').Length - 4)</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Availability</label>
+                                                <div class="profile-value">@Model.Availability</div>
+                                                <div class="availability-indicator mt-2">
+                                                    <div class="availability-dot bg-@GetAvailabilityColor(Model.Availability)"></div>
+                                                    <small class="text-muted">@GetAvailabilityStatus(Model.Availability)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Preferred Location</label>
+                                                <div class="profile-value">@Model.PreferredLocation</div>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-crosshairs me-1"></i>Service area preference
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-car"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Transportation</label>
+                                                <div class="profile-value">
+                                                    @if (Model.HasTransportation)
+                                                    {
+                                                        <span class="availability-badge available">
+                                                            <i class="fas fa-check me-1"></i>Available
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="availability-badge unavailable">
+                                                            <i class="fas fa-times me-1"></i>Not Available
+                                                        </span>
+                                                    }
+                                                </div>
+                                                <small class="text-muted">
+                                                    @(Model.HasTransportation ? "Can reach remote locations" : "Local assignments preferred")
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-item">
+                                            <div class="profile-icon">
+                                                <i class="fas fa-phone-alt"></i>
+                                            </div>
+                                            <div class="profile-content">
+                                                <label class="profile-label">Emergency Contact</label>
+                                                <div class="profile-value">@Model.EmergencyContact</div>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-shield-alt me-1"></i>Confidential information
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Section -->
+                            <div class="volunteer-actions mt-5 pt-4 border-top">
+                                <h5 class="fw-bold text-center mb-4">Quick Actions</h5>
+                                <div class="d-flex flex-column flex-lg-row justify-content-center gap-4">
+                                    <a asp-action="Index" class="btn btn-primary btn-lg px-4 py-3 action-btn">
+                                        <i class="fas fa-users me-2"></i>
+                                        <span>View All<br><small>Volunteers</small></span>
+                                    </a>
+                                    <a asp-controller="Incident" asp-action="Index" class="btn btn-danger btn-lg px-4 py-3 action-btn">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <span>Current<br><small>Incidents</small></span>
+                                    </a>
+                                    <a href="#" class="btn btn-success btn-lg px-4 py-3 action-btn">
+                                        <i class="fas fa-tasks me-2"></i>
+                                        <span>My<br><small>Assignments</small></span>
+                                    </a>
+                                    <a href="#" class="btn btn-info btn-lg px-4 py-3 action-btn">
+                                        <i class="fas fa-calendar me-2"></i>
+                                        <span>Update<br><small>Availability</small></span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Impact Timeline -->
+                            <div class="impact-timeline mt-5">
+                                <h6 class="fw-bold text-center mb-4">Your Volunteer Journey</h6>
+                                <div class="timeline">
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-user-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <strong>Registration Completed</strong>
+                                            <small>@Model.RegisteredAt.ToString("MMM dd, yyyy")</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item @(Model.Status == "Active" ? "current" : "upcoming")">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-hands-helping"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <strong>First Assignment</strong>
+                                            <small>Ready to help when needed</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item upcoming">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-award"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <strong>Community Impact</strong>
+                                            <small>Make your first difference</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .volunteer-profile-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="%23ffffff" opacity="0.1" d="M0,100 Q300,50 600,100 T1200,100 L1200,200 L0,200 Z"/></svg>');
+        background-size: cover;
+    }
+
+    .volunteer-badge {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        font-size: 2.5rem;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+    }
+
+    .empty-volunteer-state {
+        padding: 3rem 2rem;
+    }
+
+    .empty-icon-large {
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: var(--primary-color);
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .volunteer-avatar-large {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        margin: 0 auto;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+    }
+
+    .status-pulse {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid white;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .volunteer-status-badge {
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .volunteer-stats {
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: var(--border-radius);
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-color);
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .profile-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .profile-item:hover {
+        transform: translateX(5px);
+        background: white;
+        box-shadow: var(--box-shadow);
+    }
+
+    .profile-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .profile-content {
+        flex: 1;
+    }
+
+    .profile-label {
+        font-size: 0.875rem;
+        color: var(--text-color);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        line-height: 1.4;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .skill-tag {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 0.375rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .skill-tag.more {
+        background: #f1f5f9;
+        color: var(--text-color);
+    }
+
+    .availability-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .availability-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .availability-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .availability-badge.available {
+        background: var(--gradient-success);
+        color: white;
+    }
+
+    .availability-badge.unavailable {
+        background: #f1f5f9;
+        color: var(--text-color);
+    }
+
+    .volunteer-actions {
+        margin-top: 2rem;
+    }
+
+    .action-btn {
+        min-width: 160px;
+        text-align: center;
+        border-radius: var(--border-radius-lg);
+        transition: var(--transition);
+        border: none;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: var(--box-shadow-hover);
+    }
+
+    .action-btn span small {
+        font-size: 0.875rem;
+        opacity: 0.9;
+    }
+
+    .impact-timeline {
+        background: #f8fafc;
+        padding: 2rem;
+        border-radius: var(--border-radius-lg);
+    }
+
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 1;
+    }
+
+    .timeline-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        flex: 1;
+    }
+
+    .timeline-marker {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .timeline-item.completed .timeline-marker {
+        background: var(--gradient-success);
+        color: white;
+    }
+
+    .timeline-item.current .timeline-marker {
+        background: var(--gradient-primary);
+        color: white;
+        animation: bounce 2s infinite;
+    }
+
+    .timeline-item.upcoming .timeline-marker {
+        background: #f1f5f9;
+        color: var(--text-color);
+    }
+
+    .timeline-content {
+        text-align: center;
+    }
+
+    .timeline-content strong {
+        display: block;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-content small {
+        color: var(--text-color);
+        font-size: 0.75rem;
+    }
+
+    @@keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    @@media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .timeline {
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .timeline::before {
+            display: none;
+        }
+    }
+</style>
+
+@functions {
+    string GetStatusColor(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "active" => "success",
+            "inactive" => "secondary",
+            "on leave" => "warning",
+            _ => "secondary"
+        };
+    }
+
+    string GetAvailabilityColor(string availability)
+    {
+        return availability?.ToLower() switch
+        {
+            "emergency only" => "danger",
+            "flexible" => "success",
+            "weekdays" or "weekends" or "evenings" => "warning",
+            _ => "secondary"
+        };
+    }
+
+    string GetAvailabilityStatus(string availability)
+    {
+        return availability?.ToLower() switch
+        {
+            "emergency only" => "Emergency response",
+            "flexible" => "Highly available",
+            "weekdays" => "Weekday availability",
+            "weekends" => "Weekend availability",
+            "evenings" => "Evening availability",
+            _ => "Availability set"
+        };
+    }
+
+    string GetTimeSinceRegistration(DateTime registrationDate)
+    {
+        var timeSpan = DateTime.Now - registrationDate;
+        if (timeSpan.TotalDays < 1)
+            return "Today";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays} days ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)} weeks ago";
+        return $"{(int)(timeSpan.TotalDays / 30)} months ago";
+    }
+
+    int CalculateVolunteerImpact(DateTime registrationDate)
+    {
+        var months = (DateTime.Now - registrationDate).TotalDays / 30;
+        return Math.Max((int)(months * 10), 5); // Base impact calculation
+    }
+}
